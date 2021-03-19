@@ -66,6 +66,8 @@ model Equipment {
 }
 
 model User {
-  id   String @id @default(uuid())
-  role ROLES
+  id       String @id @default(uuid())
+  username String
+  password String
+  role     ROLES @default(EMPLOYEE)
 }
