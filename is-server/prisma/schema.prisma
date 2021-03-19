@@ -1,0 +1,71 @@
+generator photon {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ROLES {
+  ADMIN
+  MANAGER
+  EMPLOYEE
+}
+
+enum STATUS {
+  INSTOCK
+  SENT
+}
+
+model Cell {
+  id    String @id @default(uuid())
+  items Item[]
+}
+
+model Group {
+  id    String @id @default(uuid())
+  name  String
+  code  String
+  items Item[]
+}
+
+model Item {
+  id          String    @id @default(uuid())
+  cellId      String
+  cell        Cell      @relation(fields: [cellId], references: [id])
+  expiresAt   DateTime  @default(now())
+  departureAt DateTime  @default(now())
+  country     String
+  price       Float
+  group       Group     @relation(fields: [groupId], references: [id])
+  groupId     String
+  supplyCode  String
+  equipment   Equipment @relation(fields: [equipmentId], references: [id])
+  equipmentId String
+  status      STATUS
+
+  createdAt DateTime @default(now())
+  updateAt  DateTime
+}
+
+model Pavilion {
+  id         String      @id @default(uuid())
+  code       String
+  address    String
+  equipments Equipment[]
+}
+
+model Equipment {
+  id         String   @id @default(uuid())
+  name       String
+  code       String
+  pavilion   Pavilion @relation(fields: [pavilionId], references: [id])
+  pavilionId String
+  items      Item[]
+}
+
+model User {
+  id   String @id @default(uuid())
+  role ROLES
+}

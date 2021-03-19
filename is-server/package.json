@@ -1,0 +1,36 @@
+{
+  "name": "is-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "predev": "npm run generate:prisma",
+    "dev": "cross-env NODE_ENV=development tsnd --no-notify --respawn --transpileOnly ./src",
+    "build": "tsc",
+    "seed": "ts-node prisma/seed.ts",
+    "clean": "rimraf dist",
+    "generate": "npm run generate:prisma && npm run generate:nexus",
+    "generate:prisma": "prisma generate",
+    "generate:nexus": "ts-node --transpile-only ./src/schema",
+    "start": "cross-env NODE_ENV=production node dist/index.js",
+    "migrate": "prisma migrate save --experimental ",
+    "up": "prisma migrate up --experimental",
+    "test": "artillery run artillery.yml",
+    "migrate:dev": "prisma migrate dev --preview-feature"
+  },
+  "dependencies": {
+    "@prisma/client": "^2.19.0",
+    "cross-env": "^7.0.3",
+    "express": "^4.17.1",
+    "helmet": "^4.4.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.11",
+    "prisma": "^2.19.0"
+  }
+}

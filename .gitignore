@@ -1,1 +1,8 @@
+.vscode/
+
 /is-frontend/node_modules
+
+/is-server/node_modules/
+/is-server/dist/
+/is-server/**/*.env
+/is-server/*.lock
