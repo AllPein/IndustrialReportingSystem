@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "predev": "npm run generate:prisma",
-    "dev": "cross-env NODE_ENV=development tsnd --no-notify --respawn --transpileOnly ./src",
+    "dev": "cross-env NODE_ENV=development tsnd --no-notify --respawn ./src/index.ts",
     "build": "tsc",
     "seed": "ts-node prisma/seed.ts",
     "clean": "rimraf dist",
@@ -21,6 +21,7 @@
   "dependencies": {
     "@prisma/client": "^2.19.0",
     "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
     "cross-env": "^7.0.3",
     "express": "^4.17.1",
     "helmet": "^4.4.1",

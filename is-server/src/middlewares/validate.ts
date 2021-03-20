@@ -1,27 +1,10 @@
 import Joi from 'joi';
 import express from 'express';
 import httpStatus from 'http-status';
+import pick from '../util/pick';
+import ApiError from '../util/apiError';
 
-class ApiError extends Error {
-  statusCode: number;
-
-  constructor(statusCode: number, message: string) {
-    super(message);
-    this.statusCode = statusCode;
-  }
-}
-
-const pick = (object: Object, keys: PropertyKey[]): Object => {
-  return keys.reduce((obj: Object, key) => {
-    if (object && object.hasOwnProperty(key)) {
-      // @ts-ignore
-      obj[key] = object[key];
-    }
-    return obj;
-  }, {});
-};
-
-export const validate = (schema: Joi.ObjectSchema) => (
+export const validate = (schema: Object) => (
   req: express.Request,
   _res: express.Response,
   next: express.NextFunction
@@ -39,7 +22,3 @@ export const validate = (schema: Joi.ObjectSchema) => (
   Object.assign(req, value)
   return next()
 };
-
-express().use;
-
-Joi.object().keys;

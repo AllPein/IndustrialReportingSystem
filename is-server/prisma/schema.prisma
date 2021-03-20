@@ -18,15 +18,21 @@ enum STATUS {
   SENT
 }
 
+enum TOKEN_TYPE {
+  AUTH
+  REFRESH
+}
+
 model Cell {
   id    String @id @default(uuid())
+  code  String @unique
   items Item[]
 }
 
 model Group {
   id    String @id @default(uuid())
   name  String
-  code  String
+  code  String @unique
   items Item[]
 }
 
@@ -45,13 +51,13 @@ model Item {
   equipmentId String
   status      STATUS
 
-  createdAt DateTime @default(now())
-  updateAt  DateTime
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
 }
 
 model Pavilion {
   id         String      @id @default(uuid())
-  code       String
+  code       String      @unique
   address    String
   equipments Equipment[]
 }
@@ -59,15 +65,24 @@ model Pavilion {
 model Equipment {
   id         String   @id @default(uuid())
   name       String
-  code       String
+  code       String   @unique
   pavilion   Pavilion @relation(fields: [pavilionId], references: [id])
   pavilionId String
   items      Item[]
 }
 
 model User {
-  id       String @id @default(uuid())
+  id       String  @id @default(uuid())
   username String
   password String
-  role     ROLES @default(EMPLOYEE)
+  role     ROLES   @default(EMPLOYEE)
+  tokens   Token[]
+}
+
+model Token {
+  id     String     @id @default(uuid())
+  token  String
+  type   TOKEN_TYPE @default(AUTH)
+  user   User       @relation(fields: [userId], references: [id])
+  userId String
 }

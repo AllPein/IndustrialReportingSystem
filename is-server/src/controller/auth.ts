@@ -1,15 +1,21 @@
-import { User } from '.prisma/client'
+import { Prisma, User } from '.prisma/client'
 import { RequestHandler } from 'express'
 import { UNAUTHORIZED } from 'http-status'
 import jwt from 'jsonwebtoken'
 import { prisma } from '../app'
+import { generateTokens } from '../services/token'
 
 export const login: RequestHandler = async (req, res) => {
-  const { email: username, password } = req.body
+  const { username, password } = req.body
   const user = await prisma.user.findFirst({
     where: {
       username,
       password
+    },
+    select: {
+      password: false,
+      role: true,
+      username: true
     }
   })
   if (!user) {
@@ -22,12 +28,3 @@ export const login: RequestHandler = async (req, res) => {
   })
 }
 
-const generateTokens = (user: User, secret = 'sex') => {
-  return jwt.sign({
-    sub: {
-      id: user.id
-    }
-  }, secret, {
-    expiresIn: 60 * 60 * 10
-  })
-}
