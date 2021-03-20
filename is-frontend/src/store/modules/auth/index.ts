@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
-import user from './auth/index';
-import items from './items';
+import userInfo from "./userInfo";
+import login from './login';
 
 const reducers = combineReducers({
-  user,
-  items
+  login,
+  userInfo
 });
 
 export type IReduxState = ReturnType<typeof reducers>;
