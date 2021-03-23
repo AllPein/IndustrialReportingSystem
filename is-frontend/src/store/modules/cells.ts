@@ -1,6 +1,6 @@
 import { IReduxState } from './index';
 import { Cell, CellResponse } from '../../models/Cell';
-import { fetchAllCells } from '../../api/cells';
+import { fetchAllCells, updateCells } from '../../api/cells';
 
 enum ACTIONS {
   REQUEST_DATA = 'CELLS/REQUEST_DATA',
@@ -54,7 +54,28 @@ export const fetchCells = () => async (dispatch: Function, getState: Function) =
       })
     }
   }
+}
 
+export const updateAllCells = (cells: Partial<Cell>[]) => async (dispatch: Function) => {
+  dispatch({
+    type: ACTIONS.REQUEST_DATA
+  });
+
+  try {
+    const data = await updateCells(cells);
+    if (!!data) {
+      dispatch({
+        type: ACTIONS.RECEIVE_DATA,
+        payload: data
+      });
+    }
+
+  } catch (err) {
+    dispatch({
+      type: ACTIONS.REJECT_DATA,
+      payload: err
+    })
+  }
 }
 
 

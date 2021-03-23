@@ -29,7 +29,7 @@ export const columns = (
     {
       title: 'Цена',
       dataIndex: 'price',
-      inputType: 'input',
+      inputType: 'number',
       sorter: (a: any, b: any) => a.price - b.price,
       editable: true
     },
@@ -41,7 +41,7 @@ export const columns = (
       editable: false
     },
     {
-      title: 'Дата отправки',
+      title: 'Годен до',
       dataIndex: 'expiresAt',
       inputType: 'input',
       sorter: (a: any, b: any) => a.departureAt - b.departureAt,

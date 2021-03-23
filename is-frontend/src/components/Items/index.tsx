@@ -1,56 +1,62 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import * as UI from './styles';
 import moment from 'moment';
 import { Item } from '../../models/Item';
 import { columns } from './columns';
 import EditableTable from '../../UI/EditableTable';
 import { throttle } from '../../helpers/throttle';
-import { findCountry } from '../../api/countries';
-import 'moment/locale/ru'; 
+import { useDispatch, useSelector } from 'react-redux';
+import { loadingSelector, updateAllItems } from '../../store/modules/items';
+import { Button } from 'antd';
+import { setModalContent, setShowModal } from '../../store/modules/modal';
+import AddItemModal from '../Modals/AddItemModal';
+import { findCountry } from '../../helpers/countries';
+import { mappedItemsByDate } from '../../helpers/items';
 
-moment.locale('ru');
 
 interface IItemsProps {
   items: Item[],
-  loading: boolean
 }
 
 const Items: React.FC<IItemsProps> = ({
   items,
-  loading,
 }) => {
 
+  const [countries, setCountries] = useState<object[]>([]);
+  const loading = useSelector(loadingSelector);
+  const dispatch = useDispatch();
+
   const filteredItems = useMemo(() => {
-    return items.map((item) => {
-      return {
-        ...item,
-        departureAt: moment(item.departureAt).format('llll'),
-        expiresAt: moment(item.expiresAt).format('llll')
-      }
-    });
+    return mappedItemsByDate(items);
   }, [items]);
-  const [countries, setCountries] = useState<Array<object>>([]);
 
-  const handleCountryChange = throttle(async (value: string) => {
-    if (value.length > 0) {
-      const newCountries = (await findCountry(value)).map((country: { name: any; }) => {
-        return { value: country.name, label: country.name }
-      });
-      setCountries(newCountries);
-    }
+  const handleCountryChange = throttle(async (e: any) => {
+    const countries = await findCountry(e);
 
+    setCountries(countries);
   }, 500);
+
+  const handleAddItemClick = useCallback(() => {
+    dispatch(setShowModal(true));
+    dispatch(setModalContent(<AddItemModal />));
+  }, [items]);
+
+  const handleUpdate = useCallback((newItems: Partial<Item>[]) => {
+    dispatch(updateAllItems(newItems));
+  }, [items]);
 
   return (
     <UI.ItemsWrapper>
       <EditableTable
         originData={filteredItems}
         loading={loading}
+        onUpdate={handleUpdate}
         onCountryChange={handleCountryChange}
         countriesOptions={countries}
         recordType={!!items[0] && items[0]}
         columns={columns}
       />
+      <Button type='primary' onClick={handleAddItemClick}>Добавить товар</Button>
     </UI.ItemsWrapper>
   );
 }

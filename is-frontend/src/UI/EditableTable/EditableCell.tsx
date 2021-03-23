@@ -1,18 +1,20 @@
-import React, { useMemo } from 'react';
-import { Form, Input, Select } from 'antd';
+import React, { MouseEventHandler, useMemo } from 'react';
+import { Button, Form, Input, Select } from 'antd';
 import { Item } from '../../models/Item';
+import { PlusCircleFilled } from '@ant-design/icons';
 
 interface EditableCellProps {
   editing: boolean;
   dataIndex: string;
   title: any;
   inputType: string;
-  selectOptions?: Array<any>;
+  selectOptions?: any[];
   onCountryChange: Function;
   record: Item;
   index: number;
+  onButtonClick: any;
   children: React.ReactNode;
-  countriesOptions?: Array<any>;
+  countriesOptions?: any[];
 }
 
 const EditableCell: React.FC<EditableCellProps> = ({
@@ -26,12 +28,20 @@ const EditableCell: React.FC<EditableCellProps> = ({
   onCountryChange,
   index,
   children,
+  onButtonClick,
   ...restProps
 }) => {
   const inputNode = useMemo(() => {
     if (inputType === 'input') {
       return <Input />;
-    } else {
+    }
+    else if (inputType === 'button'){
+      return <Button icon={<PlusCircleFilled />} onClick={() => onButtonClick(record.id)}></Button>
+    }
+    else if (inputType === 'number') {
+      return <Input type='number' />;
+    }
+    else {
       if (dataIndex !== 'country') {
         return <Select options={selectOptions} />
       }
@@ -39,6 +49,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         return <Select onSearch={e => onCountryChange(e)} showSearch options={countriesOptions} />
       }
     }
+
   }, [dataIndex, countriesOptions]);
 
 
@@ -55,7 +66,12 @@ const EditableCell: React.FC<EditableCellProps> = ({
             },
           ]}
         >
-          {inputNode}
+          {dataIndex !=='items' ? inputNode : (
+            <>
+              {children}
+              {inputNode}
+            </>
+          )}
         </Form.Item>
       ) : (
         children

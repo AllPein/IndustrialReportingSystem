@@ -7,6 +7,7 @@ import { useHistory } from 'react-router';
 import { AxiosRequestConfig } from 'axios';
 import { api } from '../api/index';
 import Header from '../components/Header';
+import ModalsLayout from './Modals';
 
 const Layout = () => {
   const dispatch = useDispatch();
@@ -40,6 +41,7 @@ const Layout = () => {
     <>
       {authenticated && <Header onLogout={handleLogout} username={userInfo?.username || ''} role={userInfo?.role || ''} />}
       <Router />
+      <ModalsLayout />
     </>
 
   );

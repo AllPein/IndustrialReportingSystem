@@ -10,10 +10,12 @@ import { Equipment } from '../../models/Equipment';
 interface IItemsProps {
   loading: boolean;
   columns: Function;
-  originData: Array<any>;
+  originData: any[];
   recordType: Item | Cell | Equipment;
   onCountryChange?: Function;
-  countriesOptions?: Array<object>
+  onButtonClick?: any;
+  onUpdate?: Function;
+  countriesOptions?: any[]
 }
 
 
@@ -22,6 +24,8 @@ const EditableTable: React.FC<IItemsProps> = ({
   columns,
   originData,
   recordType,
+  onUpdate,
+  onButtonClick,
   countriesOptions,
   onCountryChange
 }) => {
@@ -69,6 +73,18 @@ const EditableTable: React.FC<IItemsProps> = ({
         setData(newData);
         setEditingKey('');
       }
+
+      const filteredData = newData.map((item: Item) => {
+        return {
+          ...item,
+          departureAt: undefined,
+          expiresAt: undefined,
+          price: !!item.price ? +item.price : undefined
+        }
+
+      });
+
+      (!!onUpdate) && onUpdate(filteredData);
     } catch (errInfo) {
       console.log('Validate Failed:', errInfo);
     }
@@ -89,7 +105,8 @@ const EditableTable: React.FC<IItemsProps> = ({
         selectOptions: col.selectOptions,
         title: col.title,
         editing: isEditing(record),
-        onCountryChange: onCountryChange
+        onCountryChange,
+        onButtonClick
       }),
     };
   });
@@ -109,6 +126,8 @@ const EditableTable: React.FC<IItemsProps> = ({
         rowClassName="editable-row"
         pagination={{
           onChange: cancel,
+          current: 1,
+          pageSize: 10
         }}
       />
     </Form>

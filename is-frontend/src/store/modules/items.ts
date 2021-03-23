@@ -1,7 +1,8 @@
 import { IReduxState } from './index';
-import { fetchAllItems } from '../../api/items';
+import { addItem, fetchAllItems, updateItems } from '../../api/items';
 import { ItemsResponse } from '../../models/Item';
 import { Item } from '../../models/Item';
+import { setModalContent, setShowModal } from './modal';
 
 enum ACTIONS {
   REQUEST_DATA = 'ITEMS/REQUEST_DATA',
@@ -55,7 +56,42 @@ export const fetchItems = () => async (dispatch: Function, getState: Function) =
       })
     }
   }
+}
 
+export const updateAllItems = (items: Partial<Item>[]) => async (dispatch: Function) => {
+  dispatch({
+    type: ACTIONS.REQUEST_DATA
+  });
+
+  try {
+    const data = await updateItems(items);
+    if (!!data) {
+      dispatch({
+        type: ACTIONS.RECEIVE_DATA,
+        payload: data
+      });
+    }
+
+  } catch (err) {
+    dispatch({
+      type: ACTIONS.REJECT_DATA,
+      payload: err
+    })
+  }
+}
+
+export const addNewItem = (data: any) => async (dispatch: Function) => {
+  try {
+    await addItem(data);
+    dispatch(fetchItems());
+    dispatch(setShowModal(false));
+    dispatch(setModalContent(null));
+  } catch (err) {
+    dispatch({
+      type: ACTIONS.REJECT_DATA,
+      payload: err
+    })
+  }
 }
 
 

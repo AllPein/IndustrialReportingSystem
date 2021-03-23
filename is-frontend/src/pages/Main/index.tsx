@@ -19,16 +19,15 @@ const Home: React.FC = () => {
   const items = useSelector(itemsSelector);
   const cells = useSelector(cellsSelector);
   const equipment = useSelector(equipmentSelector);
-  const loading = useSelector(loadingSelector);
 
   const getComponentFromTab = (name: string): JSX.Element => {
     switch (name) {
       case 'items':
-        return <Items items={items} loading={loading} />;
+        return <Items items={items} />;
       case 'cells':
-        return <Cells />
+        return <Cells cells={cells} />
       case 'equipment':
-        return <Equipment />
+        return <Equipment equipment={equipment} />
       default:
         return <></>
     }
