@@ -30,14 +30,16 @@ model Cell {
 }
 
 model Group {
-  id    String @id @default(uuid())
-  name  String
-  code  String @unique
-  items Item[]
+  id          String @id @default(uuid())
+  name        String
+  code        String @unique
+  checkNumber Int
+  items       Item[]
 }
 
 model Item {
   id          String    @id @default(uuid())
+  name        String    @default("")
   cellId      String
   cell        Cell      @relation(fields: [cellId], references: [id])
   expiresAt   DateTime  @default(now())

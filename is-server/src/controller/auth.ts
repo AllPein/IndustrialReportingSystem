@@ -15,6 +15,7 @@ export const login: RequestHandler = async (req, res) => {
     select: {
       password: false,
       role: true,
+      id: true,
       username: true
     }
   })

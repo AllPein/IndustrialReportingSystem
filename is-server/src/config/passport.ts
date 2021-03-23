@@ -2,11 +2,13 @@ import {
   Strategy as JwtStrategy,
   ExtractJwt,
   VerifyCallback,
+  StrategyOptions,
 } from 'passport-jwt';
 import { prisma } from '../app';
+import config from '../config';
 
-const jwtOptions = {
-  secretOrKey: 'sex',
+const jwtOptions: StrategyOptions = {
+  secretOrKey: config.jwtSecret,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 };
 

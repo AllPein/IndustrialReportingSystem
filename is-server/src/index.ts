@@ -10,3 +10,14 @@ process.on('SIGTERM', () => {
   }
   prisma.$disconnect()
 });
+
+interface Item {
+  id: string,
+  name: string
+}
+
+type Editable<T> = {
+  [key in keyof T]: T[key] | Element
+}
+
+type EditableItem = Editable<Item>

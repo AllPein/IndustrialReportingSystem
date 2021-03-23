@@ -6,15 +6,15 @@
   "scripts": {
     "predev": "npm run generate:prisma",
     "dev": "cross-env NODE_ENV=development tsnd --no-notify --respawn ./src/index.ts",
-    "prebuild": "yarn run generate:prisma",
+    "prebuild": "yarn clean && yarn migrate && yarn run generate:prisma",
     "build": "tsc",
     "seed": "ts-node prisma/seed.ts",
     "clean": "rimraf dist",
     "generate": "npm run generate:prisma && npm run generate:nexus",
     "generate:prisma": "prisma generate",
     "generate:nexus": "ts-node --transpile-only ./src/schema",
-    "start": "cross-env NODE_ENV=production node dist/index.js",
-    "migrate": "prisma migrate save --experimental ",
+    "start": "cross-env NODE_ENV=production node dist/src/index.js",
+    "migrate": "prisma migrate deploy ",
     "up": "prisma migrate up --experimental",
     "test": "artillery run artillery.yml",
     "migrate:dev": "prisma migrate dev --preview-feature"
@@ -23,7 +23,9 @@
     "@prisma/client": "^2.19.0",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "cross-env": "^7.0.3",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "helmet": "^4.4.1",
     "http-status": "^1.5.0",
@@ -39,6 +41,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/cors": "^2.8.10",
     "@types/express": "^4.17.11",
     "@types/passport-jwt": "^3.0.5",
     "prisma": "^2.19.0"

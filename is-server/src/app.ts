@@ -1,6 +1,7 @@
 import express from 'express';
 import helmet from 'helmet';
 import bodyParser from 'body-parser'
+import cors from 'cors'
 import { PrismaClient } from '@prisma/client';
 import passport from 'passport';
 import jwtStrategy from './config/passport';
@@ -11,6 +12,7 @@ import { errorConverter, errorHandler } from './middlewares/error';
 
 const app = express();
 export const prisma = new PrismaClient();
+app.use(cors())
 app.use(bodyParser.json())
 app.use(helmet());
 app.use(passport.initialize());

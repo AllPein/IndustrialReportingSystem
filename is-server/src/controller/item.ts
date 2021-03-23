@@ -4,7 +4,27 @@ import { prisma } from '../app';
 
 export const findMany: RequestHandler = async (req, res) => {
   try {
-    const items = await prisma.item.findMany();
+    const items = await prisma.item.findMany({
+      select: {
+        id: true,
+        price: true,
+        name: true,
+        country: true,
+        departureAt: true,
+        expiresAt: true,
+        supplyCode: true,
+        status: true,
+        cell: true,
+        equipment: {
+          select: {
+            pavilion: true,
+            name: true,
+            code: true
+          }
+        },
+      },
+    });
+
     res.send(items);
   } catch (err) {
     res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);

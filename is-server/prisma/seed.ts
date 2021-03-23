@@ -37,6 +37,7 @@ const createItem = async () => {
       },
       group: {
         create: {
+          checkNumber: 10,
           code: 'ABCD',
           name: 'Flex',
         },
