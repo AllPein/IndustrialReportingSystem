@@ -11,6 +11,6 @@ export default {
   hoverGreen: '#78B02F',
   blackBack: 'rgba(0, 0, 0, 0.3)',
   transparent: '#ffffff00',
-  mainBlue: '#2196F3',
+  mainBlue: '#1890FF',
   hoverBlue: '#42A5F5'
 }

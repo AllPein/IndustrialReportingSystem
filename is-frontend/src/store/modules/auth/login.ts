@@ -1,6 +1,7 @@
 import { login as signIn } from '../../../api/login';
-import { fetchUserInfo } from './userInfo';
-import axios from 'axios';
+import { fetchUserInfo, setUserInfo } from './userInfo';
+import { IReduxState } from '../index';
+import { api } from '../../../api';
 
 
 enum ACTIONS {
@@ -31,16 +32,16 @@ const initialState: ILoginState = {
   error: null
 };
 
-export const setToken = (token: string) => (dispatch: Function) => dispatch({
-  type: ACTIONS.RECEIVE_TOKEN, 
+export const setToken = (token: string | null) => (dispatch: Function) => dispatch({
+  type: ACTIONS.RECEIVE_TOKEN,
   payload: token
 });
 
 export const login = (username: string, password: string) => async (dispatch: Function) => {
   dispatch({
-    type: ACTIONS.REQUEST_LOGIN, 
+    type: ACTIONS.REQUEST_LOGIN,
   })
-  
+
   try {
     const token = await signIn(username, password);
 
@@ -49,12 +50,19 @@ export const login = (username: string, password: string) => async (dispatch: Fu
       localStorage.setItem('token', token);
       await dispatch(fetchUserInfo(token));
     }
-  } catch(err){
+  } catch (err) {
     dispatch({
-      type: ACTIONS.REJECT_LOGIN, 
+      type: ACTIONS.REJECT_LOGIN,
       payload: err
     })
   }
+}
+
+export const logout = () => async (dispatch: Function) => {
+  dispatch(setToken(null));
+  localStorage.removeItem('token');
+  api.defaults.headers.common['Authorization'] = '';
+  dispatch(setUserInfo(null, false));
 }
 
 
@@ -77,3 +85,7 @@ export default (
       return { ...state };
   }
 };
+
+
+export const loadingSelector = (state: IReduxState) => state.user.login.loading;
+export const errorSelector = (state: IReduxState) => state.user.login.error;

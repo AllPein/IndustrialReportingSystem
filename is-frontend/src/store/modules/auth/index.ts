@@ -7,6 +7,5 @@ const reducers = combineReducers({
   userInfo
 });
 
-export type IReduxState = ReturnType<typeof reducers>;
 
 export default reducers;

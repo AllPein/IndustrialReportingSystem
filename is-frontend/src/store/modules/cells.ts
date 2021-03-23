@@ -1,12 +1,11 @@
 import { IReduxState } from './index';
-import { fetchAllItems } from '../../api/items';
-import { ItemsResponse } from '../../models/Item';
-import { Item } from '../../models/Item';
+import { Cell, CellResponse } from '../../models/Cell';
+import { fetchAllCells } from '../../api/cells';
 
 enum ACTIONS {
-  REQUEST_DATA = 'ITEMS/REQUEST_DATA',
-  RECEIVE_DATA = 'ITEMS/RECEIVE_DATA',
-  REJECT_DATA = 'ITEMS/REJECT_DATA',
+  REQUEST_DATA = 'CELLS/REQUEST_DATA',
+  RECEIVE_DATA = 'CELLS/RECEIVE_DATA',
+  REJECT_DATA = 'CELLS/REJECT_DATA',
 }
 
 type GAction<T, U> = {
@@ -17,22 +16,22 @@ type GAction<T, U> = {
 type Action =
   | GAction<ACTIONS.REQUEST_DATA, undefined>
   | GAction<ACTIONS.REJECT_DATA, string>
-  | GAction<ACTIONS.RECEIVE_DATA, ItemsResponse>
+  | GAction<ACTIONS.RECEIVE_DATA, CellResponse>
 
-interface IItemsState {
-  items: Array<Item>;
+interface ICellsState {
+  cells: Array<Cell>;
   loading: boolean;
   error: string | null
 }
 
-const initialState: IItemsState = {
-  items: [],
+const initialState: ICellsState = {
+  cells: [],
   loading: false,
   error: null
 };
 
 
-export const fetchItems = () => async (dispatch: Function, getState: Function) => {
+export const fetchCells = () => async (dispatch: Function, getState: Function) => {
   const authenticated = getState().user.userInfo.authenticated;
   if (authenticated) {
     dispatch({
@@ -40,11 +39,11 @@ export const fetchItems = () => async (dispatch: Function, getState: Function) =
     });
 
     try {
-      const items = await fetchAllItems();
-      if (!!items) {
+      const cells = await fetchAllCells();
+      if (!!cells) {
         dispatch({
           type: ACTIONS.RECEIVE_DATA,
-          payload: items
+          payload: cells
         });
       }
 
@@ -60,9 +59,9 @@ export const fetchItems = () => async (dispatch: Function, getState: Function) =
 
 
 export default (
-  state: IItemsState = initialState,
+  state: ICellsState = initialState,
   action: Action
-): IItemsState => {
+): ICellsState => {
   switch (action.type) {
     case ACTIONS.REQUEST_DATA:
       return { ...state, loading: true };
@@ -71,7 +70,7 @@ export default (
     case ACTIONS.RECEIVE_DATA:
       return {
         ...state,
-        items: action.payload,
+        cells: action.payload,
         loading: false,
       };
     default:
@@ -80,5 +79,5 @@ export default (
 };
 
 
-export const itemsSelector = (state: IReduxState) => state.items.items;
-export const loadingSelector = (state: IReduxState) => state.items.loading;
+export const cellsSelector = (state: IReduxState) => state.cells.cells;
+export const loadingSelector = (state: IReduxState) => state.cells.loading;

@@ -1,12 +1,13 @@
 import { IReduxState } from './index';
-import { fetchAllItems } from '../../api/items';
-import { ItemsResponse } from '../../models/Item';
-import { Item } from '../../models/Item';
+import { Cell, CellResponse } from '../../models/Cell';
+import { fetchAllCells } from '../../api/cells';
+import { Equipment, EquipmentResponse } from '../../models/Equipment';
+import { fetchAllEquipment } from '../../api/equipment';
 
 enum ACTIONS {
-  REQUEST_DATA = 'ITEMS/REQUEST_DATA',
-  RECEIVE_DATA = 'ITEMS/RECEIVE_DATA',
-  REJECT_DATA = 'ITEMS/REJECT_DATA',
+  REQUEST_DATA = 'EQUIPMENT/REQUEST_DATA',
+  RECEIVE_DATA = 'EQUIPMENT/RECEIVE_DATA',
+  REJECT_DATA = 'EQUIPMENT/REJECT_DATA',
 }
 
 type GAction<T, U> = {
@@ -17,22 +18,22 @@ type GAction<T, U> = {
 type Action =
   | GAction<ACTIONS.REQUEST_DATA, undefined>
   | GAction<ACTIONS.REJECT_DATA, string>
-  | GAction<ACTIONS.RECEIVE_DATA, ItemsResponse>
+  | GAction<ACTIONS.RECEIVE_DATA, EquipmentResponse>
 
-interface IItemsState {
-  items: Array<Item>;
+interface IEquipmentState {
+  equipment: Array<Equipment>;
   loading: boolean;
   error: string | null
 }
 
-const initialState: IItemsState = {
-  items: [],
+const initialState: IEquipmentState = {
+  equipment: [],
   loading: false,
   error: null
 };
 
 
-export const fetchItems = () => async (dispatch: Function, getState: Function) => {
+export const fetchEquipment = () => async (dispatch: Function, getState: Function) => {
   const authenticated = getState().user.userInfo.authenticated;
   if (authenticated) {
     dispatch({
@@ -40,11 +41,11 @@ export const fetchItems = () => async (dispatch: Function, getState: Function) =
     });
 
     try {
-      const items = await fetchAllItems();
-      if (!!items) {
+      const cells = await fetchAllEquipment();
+      if (!!cells) {
         dispatch({
           type: ACTIONS.RECEIVE_DATA,
-          payload: items
+          payload: cells
         });
       }
 
@@ -60,9 +61,9 @@ export const fetchItems = () => async (dispatch: Function, getState: Function) =
 
 
 export default (
-  state: IItemsState = initialState,
+  state: IEquipmentState = initialState,
   action: Action
-): IItemsState => {
+): IEquipmentState => {
   switch (action.type) {
     case ACTIONS.REQUEST_DATA:
       return { ...state, loading: true };
@@ -71,7 +72,7 @@ export default (
     case ACTIONS.RECEIVE_DATA:
       return {
         ...state,
-        items: action.payload,
+        equipment: action.payload,
         loading: false,
       };
     default:
@@ -80,5 +81,5 @@ export default (
 };
 
 
-export const itemsSelector = (state: IReduxState) => state.items.items;
-export const loadingSelector = (state: IReduxState) => state.items.loading;
+export const equipmentSelector = (state: IReduxState) => state.equipment.equipment;
+export const loadingSelector = (state: IReduxState) => state.cells.loading;

@@ -1,4 +1,4 @@
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 
 export const FormLogin = styled.div`
   min-width: 500px;
@@ -19,3 +19,6 @@ export const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
 `
+export const LabelStyles = css`
+  margin-bottom: 16px;
+`;

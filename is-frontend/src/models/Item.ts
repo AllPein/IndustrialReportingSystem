@@ -1,10 +1,10 @@
-export type ItemsResponse = Items;
-
-type Items = Item[];
+export enum Statuses {
+  SENT = 'Отправлен',
+  INSTOCK = 'На складе'
+};
 
 export interface Item {
   name: string;
-  group: string;
   country: string;
   supplyCode: string;
   departureAt: string;
@@ -12,10 +12,6 @@ export interface Item {
   id: string;
   price: number;
   status: Statuses;
-    
-}
+};
 
-enum Statuses {
-  'SENT',
-  'INSTOCK'
-}
+export type ItemsResponse = Item[];
