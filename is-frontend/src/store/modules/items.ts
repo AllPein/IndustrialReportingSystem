@@ -3,6 +3,8 @@ import { addItem, fetchAllItems, updateItems } from '../../api/items';
 import { ItemsResponse } from '../../models/Item';
 import { Item } from '../../models/Item';
 import { setModalContent, setShowModal } from './modal';
+import { fetchCells } from './cells';
+import { fetchEquipment } from './equipment';
 
 enum ACTIONS {
   REQUEST_DATA = 'ITEMS/REQUEST_DATA',
@@ -66,10 +68,14 @@ export const updateAllItems = (items: Partial<Item>[]) => async (dispatch: Funct
   try {
     const data = await updateItems(items);
     if (!!data) {
+      await dispatch(fetchCells());
+      await dispatch(fetchEquipment());
+
       dispatch({
         type: ACTIONS.RECEIVE_DATA,
         payload: data
       });
+
     }
 
   } catch (err) {

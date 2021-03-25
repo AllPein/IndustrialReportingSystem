@@ -10,6 +10,7 @@ import Cells from '../../components/Cells';
 import Equipment from '../../components/Equipment';
 import { cellsSelector, fetchCells } from '../../store/modules/cells';
 import { equipmentSelector, fetchEquipment } from '../../store/modules/equipment';
+import { getMappedItems } from '../../helpers/items';
 
 const { TabPane } = Tabs;
 
@@ -23,16 +24,19 @@ const Home: React.FC = () => {
   const getComponentFromTab = (name: string): JSX.Element => {
     switch (name) {
       case 'items':
-        return <Items items={items} />;
+        return <Items items={filteredItems} />;
       case 'cells':
-        return <Cells cells={cells} />
+        return <Cells cells={cells} items={filteredItems} />
       case 'equipment':
-        return <Equipment equipment={equipment} />
+        return <Equipment equipment={equipment} items={filteredItems} />
       default:
         return <></>
     }
-
   };
+
+  const filteredItems = useMemo(() => {
+    return getMappedItems(items);
+  }, [items]);
 
   useEffect(() => {
     dispatch(fetchItems());

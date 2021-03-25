@@ -10,11 +10,11 @@ import { useDispatch } from 'react-redux';
 import { addNewItem } from '../../../store/modules/items';
 import { setShowModal } from '../../../store/modules/modal';
 
-interface IAddItemModal {
+interface IAddItemModalProps {
   cellId?: string;
 }
 
-const AddItemModal: React.FC<IAddItemModal> = ({ cellId }) => {
+const AddItemModal: React.FC<IAddItemModalProps> = ({ cellId }) => {
   const dispatch = useDispatch();
 
   const [nameValue, setNameValue] = useState<string>('');

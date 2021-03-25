@@ -2,7 +2,10 @@ import { IReduxState } from './index';
 import { Cell, CellResponse } from '../../models/Cell';
 import { fetchAllCells } from '../../api/cells';
 import { Equipment, EquipmentResponse } from '../../models/Equipment';
-import { fetchAllEquipment } from '../../api/equipment';
+import { fetchAllEquipment, updateEquipment } from '../../api/equipment';
+import { Item } from '../../models/Item';
+import { updateItem } from '../../api/items';
+import { fetchItems } from './items';
 
 enum ACTIONS {
   REQUEST_DATA = 'EQUIPMENT/REQUEST_DATA',
@@ -34,29 +37,68 @@ const initialState: IEquipmentState = {
 
 
 export const fetchEquipment = () => async (dispatch: Function, getState: Function) => {
-  const authenticated = getState().user.userInfo.authenticated;
-  if (authenticated) {
-    dispatch({
-      type: ACTIONS.REQUEST_DATA
-    });
+  dispatch({
+    type: ACTIONS.REQUEST_DATA
+  });
 
-    try {
-      const cells = await fetchAllEquipment();
-      if (!!cells) {
-        dispatch({
-          type: ACTIONS.RECEIVE_DATA,
-          payload: cells
-        });
-      }
-
-    } catch (err) {
+  try {
+    const equipment = await fetchAllEquipment();
+    if (!!equipment) {
       dispatch({
-        type: ACTIONS.REJECT_DATA,
-        payload: err
-      })
+        type: ACTIONS.RECEIVE_DATA,
+        payload: equipment
+      });
     }
+
+  } catch (err) {
+    dispatch({
+      type: ACTIONS.REJECT_DATA,
+      payload: err
+    })
   }
 
+}
+
+export const addItemToEquipment = (item: Partial<Item>) => async (dispatch: Function) => {
+  dispatch({
+    type: ACTIONS.REQUEST_DATA
+  });
+
+  try {
+    const response = await updateItem([item]);
+    if (!!response) {
+      await dispatch(fetchItems());
+      await dispatch(fetchEquipment());
+    }
+
+  } catch (err) {
+    dispatch({
+      type: ACTIONS.REJECT_DATA,
+      payload: err
+    });
+  }
+}
+
+export const updateAllEquipment = (equipment: Partial<Equipment>[]) => async (dispatch: Function) => {
+  dispatch({
+    type: ACTIONS.REQUEST_DATA
+  });
+
+  try {
+    const data = await updateEquipment(equipment);
+    if (!!data) {
+      dispatch({
+        type: ACTIONS.RECEIVE_DATA,
+        payload: data
+      });
+    }
+
+  } catch (err) {
+    dispatch({
+      type: ACTIONS.REJECT_DATA,
+      payload: err
+    })
+  }
 }
 
 

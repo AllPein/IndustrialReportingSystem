@@ -9,6 +9,8 @@ export interface Item {
   supplyCode: string;
   departureAt: string;
   expiresAt: string;
+  equipmentId: string;
+  cellId: string;
   id: string;
   price: number;
   status: Statuses;

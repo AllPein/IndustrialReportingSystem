@@ -11,8 +11,14 @@ export const addItem = async (data: Partial<Item>) => {
   await api.post('/v1/item', data);
 }
 
-export const updateItems = async (data: Partial<Item>[]) => {
-  const response = await api.patch('/v1/item', data);
+export const updateItems = async (items: Partial<Item>[]) => {
+  const data = await api.patch('/v1/item', items);
 
-  return response.data;
+  return data.data;
+}
+
+export const updateItem = async (item: Partial<Item>[]) => {
+  const data = await api.patch('/v1/item', item);
+
+  return data.data;
 }

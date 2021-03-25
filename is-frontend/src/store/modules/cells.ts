@@ -1,6 +1,9 @@
 import { IReduxState } from './index';
 import { Cell, CellResponse } from '../../models/Cell';
-import { fetchAllCells, updateCells } from '../../api/cells';
+import { fetchAllCells } from '../../api/cells';
+import { Item } from '../../models/Item';
+import { updateItem } from '../../api/items';
+import { fetchItems } from './items';
 
 enum ACTIONS {
   REQUEST_DATA = 'CELLS/REQUEST_DATA',
@@ -32,41 +35,16 @@ const initialState: ICellsState = {
 
 
 export const fetchCells = () => async (dispatch: Function, getState: Function) => {
-  const authenticated = getState().user.userInfo.authenticated;
-  if (authenticated) {
-    dispatch({
-      type: ACTIONS.REQUEST_DATA
-    });
-
-    try {
-      const cells = await fetchAllCells();
-      if (!!cells) {
-        dispatch({
-          type: ACTIONS.RECEIVE_DATA,
-          payload: cells
-        });
-      }
-
-    } catch (err) {
-      dispatch({
-        type: ACTIONS.REJECT_DATA,
-        payload: err
-      })
-    }
-  }
-}
-
-export const updateAllCells = (cells: Partial<Cell>[]) => async (dispatch: Function) => {
   dispatch({
     type: ACTIONS.REQUEST_DATA
   });
 
   try {
-    const data = await updateCells(cells);
-    if (!!data) {
+    const cells = await fetchAllCells();
+    if (!!cells) {
       dispatch({
         type: ACTIONS.RECEIVE_DATA,
-        payload: data
+        payload: cells
       });
     }
 
@@ -77,6 +55,28 @@ export const updateAllCells = (cells: Partial<Cell>[]) => async (dispatch: Funct
     })
   }
 }
+
+export const addItemToCell = (item: Partial<Item>) => async (dispatch: Function) => {
+  dispatch({
+    type: ACTIONS.REQUEST_DATA
+  });
+
+  try {
+    const response = await updateItem([item]);
+    if (!!response) {
+      await dispatch(fetchItems());
+      await dispatch(fetchCells());
+    }
+
+  } catch (err) {
+    dispatch({
+      type: ACTIONS.REJECT_DATA,
+      payload: err
+    });
+  }
+}
+
+
 
 
 export default (

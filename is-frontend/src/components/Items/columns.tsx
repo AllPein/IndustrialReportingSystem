@@ -50,7 +50,7 @@ export const columns = (
     {
       title: 'Страна',
       dataIndex: 'country',
-      inputType: 'select',
+      inputType: 'search',
       sorter: (a: any, b: any) => a.country - b.country,
       editable: true
     },

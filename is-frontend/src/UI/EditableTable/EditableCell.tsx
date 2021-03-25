@@ -9,8 +9,9 @@ interface EditableCellProps {
   title: any;
   inputType: string;
   selectOptions?: any[];
-  onCountryChange: Function;
+  onSearch: Function;
   record: Item;
+  cancel: any;
   index: number;
   onButtonClick: any;
   children: React.ReactNode;
@@ -25,18 +26,25 @@ const EditableCell: React.FC<EditableCellProps> = ({
   record,
   selectOptions,
   countriesOptions,
-  onCountryChange,
+  onSearch,
   index,
   children,
+  cancel,
   onButtonClick,
   ...restProps
 }) => {
+
+  const handleButtonEdit = () => {
+    onButtonClick(record.id);
+    cancel();
+  }
+
   const inputNode = useMemo(() => {
     if (inputType === 'input') {
       return <Input />;
     }
     else if (inputType === 'button'){
-      return <Button icon={<PlusCircleFilled />} onClick={() => onButtonClick(record.id)}></Button>
+      return <Button icon={<PlusCircleFilled />} onClick={handleButtonEdit}></Button>
     }
     else if (inputType === 'number') {
       return <Input type='number' />;
@@ -46,7 +54,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
         return <Select options={selectOptions} />
       }
       else {
-        return <Select onSearch={e => onCountryChange(e)} showSearch options={countriesOptions} />
+        return <Select onSearch={e => onSearch(e)} showSearch options={countriesOptions} />
       }
     }
 

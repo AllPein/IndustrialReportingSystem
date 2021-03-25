@@ -3,6 +3,7 @@ import { Item } from '../../models/Item';
 import { Popover, Tag, Typography } from 'antd';
 import { randomColor } from '../../helpers/colors';
 import ItemsPopover from '../Popovers/ItemsPopover';
+import { Cell } from '../../models/Cell';
 
 export const columns = (
   editingKey: string | undefined,
@@ -19,7 +20,7 @@ export const columns = (
       dataIndex: 'code',
       inputType: 'input',
       sorter: (a: any, b: any) => a.cellCode - b.cellCode,
-      editable: true
+      editable: false
     },
     {
       title: 'Товары в ячейке',
@@ -49,13 +50,10 @@ export const columns = (
     title: 'Действие',
     dataIndex: 'operation',
     editable: false,
-    render: (_: any, record: Item) => {
+    render: (_: any, record: Cell) => {
       const editable = isEditing(record);
       return editable ? (
         <span>
-          <a href="javascript:;" onClick={() => save(record.id)} style={{ marginRight: 8 }}>
-            Сохранить
-          </a>
           <a href="javascript:;" onClick={cancel}>Отменить</a>
         </span>
       ) : (

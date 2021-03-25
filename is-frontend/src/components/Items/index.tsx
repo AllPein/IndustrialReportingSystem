@@ -11,7 +11,7 @@ import { Button } from 'antd';
 import { setModalContent, setShowModal } from '../../store/modules/modal';
 import AddItemModal from '../Modals/AddItemModal';
 import { findCountry } from '../../helpers/countries';
-import { mappedItemsByDate } from '../../helpers/items';
+import { getMappedItems } from '../../helpers/items';
 
 
 interface IItemsProps {
@@ -26,11 +26,8 @@ const Items: React.FC<IItemsProps> = ({
   const loading = useSelector(loadingSelector);
   const dispatch = useDispatch();
 
-  const filteredItems = useMemo(() => {
-    return mappedItemsByDate(items);
-  }, [items]);
 
-  const handleCountryChange = throttle(async (e: any) => {
+  const handleCountrySearch = throttle(async (e: any) => {
     const countries = await findCountry(e);
 
     setCountries(countries);
@@ -48,10 +45,10 @@ const Items: React.FC<IItemsProps> = ({
   return (
     <UI.ItemsWrapper>
       <EditableTable
-        originData={filteredItems}
+        originData={items}
         loading={loading}
         onUpdate={handleUpdate}
-        onCountryChange={handleCountryChange}
+        onSearch={handleCountrySearch}
         countriesOptions={countries}
         recordType={!!items[0] && items[0]}
         columns={columns}

@@ -6,13 +6,14 @@ import EditableCell from './EditableCell';
 import { Item } from '../../models/Item';
 import { Cell } from '../../models/Cell';
 import { Equipment } from '../../models/Equipment';
+import { getReversedStatus } from '../../helpers/items';
 
 interface IItemsProps {
   loading: boolean;
   columns: Function;
   originData: any[];
   recordType: Item | Cell | Equipment;
-  onCountryChange?: Function;
+  onSearch?: Function;
   onButtonClick?: any;
   onUpdate?: Function;
   countriesOptions?: any[]
@@ -27,7 +28,7 @@ const EditableTable: React.FC<IItemsProps> = ({
   onUpdate,
   onButtonClick,
   countriesOptions,
-  onCountryChange
+  onSearch
 }) => {
 
   const role = useSelector(roleSelector);
@@ -79,6 +80,8 @@ const EditableTable: React.FC<IItemsProps> = ({
           ...item,
           departureAt: undefined,
           expiresAt: undefined,
+          cellId: !!item.cellId ? item.cellId : undefined,
+          status: getReversedStatus(item.status),
           price: !!item.price ? +item.price : undefined
         }
 
@@ -103,9 +106,10 @@ const EditableTable: React.FC<IItemsProps> = ({
         dataIndex: col.dataIndex,
         countriesOptions: countriesOptions,
         selectOptions: col.selectOptions,
+        cancel,
         title: col.title,
         editing: isEditing(record),
-        onCountryChange,
+        onSearch,
         onButtonClick
       }),
     };
@@ -126,7 +130,6 @@ const EditableTable: React.FC<IItemsProps> = ({
         rowClassName="editable-row"
         pagination={{
           onChange: cancel,
-          current: 1,
           pageSize: 10
         }}
       />
