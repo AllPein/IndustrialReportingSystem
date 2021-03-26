@@ -8,7 +8,7 @@ router
   .route('/')
   .get(auth('manageItems'),  equipmentController.findMany)
   .post(auth('manageItems'),  equipmentController.create)
-  .patch(auth('manageItems'),  equipmentController.create)
+  .patch(auth('manageItems'),  equipmentController.update)
   
 router.route('/:id').get(auth('manageItems'),  equipmentController.findUnique);
 

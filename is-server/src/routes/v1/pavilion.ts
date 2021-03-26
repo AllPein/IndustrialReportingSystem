@@ -8,7 +8,7 @@ router
   .route('/')
   .get(auth('manageItems'),  pavilionController.findMany)
   .post(auth('manageItems'),  pavilionController.create)
-  .patch(auth('manageItems'),  pavilionController.create)
+  .patch(auth('manageItems'),  pavilionController.update)
   
 router.route('/:id').get(auth('manageItems'),  pavilionController.findUnique);
 

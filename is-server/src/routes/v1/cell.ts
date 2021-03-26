@@ -8,7 +8,7 @@ router
   .route('/')
   .get(auth('manageItems'),  cellController.findMany)
   .post(auth('manageItems'),  cellController.create)
-  .patch(auth('manageItems'),  cellController.create)
+  .patch(auth('manageItems'),  cellController.update)
   
 router.route('/:id').get(auth('manageItems'),  cellController.findUnique);
 

@@ -7,6 +7,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+generator docs {
+  provider = "node node_modules/prisma-docs-generator"
+}
+
 enum ROLES {
   ADMIN
   MANAGER
@@ -30,27 +34,26 @@ model Cell {
 }
 
 model Group {
-  id          String @id @default(uuid())
-  name        String
-  code        String @unique
-  checkNumber Int
-  items       Item[]
+  id    String @id @default(uuid())
+  name  String
+  code  String @unique
+  items Item[]
 }
 
 model Item {
-  id          String    @id @default(uuid())
-  name        String    @default("")
-  cellId      String
-  cell        Cell      @relation(fields: [cellId], references: [id])
-  expiresAt   DateTime  @default(now())
-  departureAt DateTime  @default(now())
+  id          String     @id @default(uuid())
+  name        String     @default("")
+  cellId      String?
+  cell        Cell?      @relation(fields: [cellId], references: [id])
+  expiresAt   DateTime   @default(now())
+  departureAt DateTime   @default(now())
   country     String
   price       Float
-  group       Group     @relation(fields: [groupId], references: [id])
-  groupId     String
+  group       Group?     @relation(fields: [groupId], references: [id])
+  groupId     String?
   supplyCode  String
-  equipment   Equipment @relation(fields: [equipmentId], references: [id])
-  equipmentId String
+  equipment   Equipment? @relation(fields: [equipmentId], references: [id])
+  equipmentId String?
   status      STATUS
 
   createdAt DateTime  @default(now())
