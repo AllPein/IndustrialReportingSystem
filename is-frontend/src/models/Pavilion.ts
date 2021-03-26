@@ -1,6 +1,6 @@
 
 export interface Pavilion {
-  id: string;     
+  id?: string;     
   code: string;     
-  address: string;
+  address?: string;
 }

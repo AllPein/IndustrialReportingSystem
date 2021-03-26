@@ -27,9 +27,11 @@ export const columns = (
       dataIndex: 'items',
       inputType: 'button',
       editable: true,
-      render: (items: Item[]) => (
+      render: (items: Item[], record: Cell) => {
+        const editable = isEditing(record);
+        return (
         <>
-          { !!items && items.length > 0 ?
+          { !!items && items.length > 0  ?
             (
               items.map((item: Item) => (
                 <Popover trigger='click' content={<ItemsPopover item={item} />}>
@@ -42,7 +44,7 @@ export const columns = (
             )}
         </>
 
-      )
+      )}
     }
   ];
 
@@ -57,8 +59,8 @@ export const columns = (
           <a href="javascript:;" onClick={cancel}>Отменить</a>
         </span>
       ) : (
-        <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-          Изменить
+        <Typography.Link disabled={editingKey !== '' || record.items.length >= 10} onClick={() => edit(record)}>
+          Добавить товар
         </Typography.Link>
       );
     },

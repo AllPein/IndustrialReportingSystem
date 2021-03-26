@@ -12,6 +12,8 @@ import { loadingSelector, updateAllEquipment } from '../../store/modules/equipme
 import { getMappedItems } from '../../helpers/items';
 import { setModalContent, setShowModal } from '../../store/modules/modal';
 import AddExactItem from '../Modals/AddExactItem';
+import { Button } from 'antd';
+import AddEquipmentModal from '../Modals/AddEquipmentModal';
 
 moment.locale('ru');
 
@@ -37,14 +39,21 @@ const Equipment: React.FC<IEquipmentProps> = ({
     })
   }, [equipment]);
 
-  const filteredItems = useCallback((eqId: string) => {
-    return items.filter((item: any) => item.cellId !== eqId)
+  const filterItems = (eqId: string) => {
+    const newItems = items.filter((item: any) => item.equipmentId !== eqId &&  (item.status !== 'На складе'));
+    return newItems;
+  };
+
+  const handleAddEquipmentClick = useCallback(() => {
+    dispatch(setShowModal(true));
+    dispatch(setModalContent(<AddEquipmentModal />));
   }, [items]);
 
-  const handleAddItem = useCallback((eqId: string) => {
+  const handleAddItem = (eqId: string) => {
+    const filteredItems = filterItems(eqId);
     dispatch(setShowModal(true));
-    dispatch(setModalContent(<AddExactItem items={filteredItems(eqId)} eqId={eqId} />))
-  }, [equipment]);
+    dispatch(setModalContent(<AddExactItem eqId={eqId} items={filteredItems} />))
+  };
 
   const handleUpdate = useCallback((newEquipment: Partial<EquipmentModel>[]) => {
     dispatch(updateAllEquipment(newEquipment));
@@ -60,6 +69,7 @@ const Equipment: React.FC<IEquipmentProps> = ({
         recordType={!!equipment[0] && equipment[0]}
         columns={columns}
       />
+      <Button type='primary' onClick={handleAddEquipmentClick}>Добавить оборудование</Button>
     </UI.EquipmentWrapper>
   );
 }

@@ -31,7 +31,13 @@ const initialState: IModalState = {
 };
 
 
-export const setShowModal = (showModal: boolean) => ({ type: ACTIONS.SHOW_MODAL, payload: showModal });
+export const setShowModal = (showModal: boolean) => (dispatch: Function) => {
+  if (showModal === false) {
+    dispatch(setModalContent(null));
+  }
+  
+  dispatch({ type: ACTIONS.SHOW_MODAL, payload: showModal });
+};
 export const setModalTitle = (title: JSX.Element | null) => ({ type: ACTIONS.SET_TITLE, payload: title });
 export const setModalContent = (content: JSX.Element | null) => ({ type: ACTIONS.SET_CONTENT, payload: content });
 

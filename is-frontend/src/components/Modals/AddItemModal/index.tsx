@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as UI from './styles';
 import { Item } from '../../../models/Item';
 import { Input, Typography, Button, Row, Col, DatePicker, Select } from 'antd';
@@ -6,9 +6,10 @@ import { findCountry } from '../../../helpers/countries';
 import { throttle } from '../../../helpers/throttle';
 import 'moment/locale/ru';
 import locale from 'antd/es/date-picker/locale/ru_RU'
-import { useDispatch } from 'react-redux';
-import { addNewItem } from '../../../store/modules/items';
+import { useDispatch, useSelector } from 'react-redux';
+import { addNewItem, errorSelector } from '../../../store/modules/items';
 import { setShowModal } from '../../../store/modules/modal';
+import { openNotification } from '../../../helpers/notification';
 
 interface IAddItemModalProps {
   cellId?: string;
@@ -17,12 +18,20 @@ interface IAddItemModalProps {
 const AddItemModal: React.FC<IAddItemModalProps> = ({ cellId }) => {
   const dispatch = useDispatch();
 
-  const [nameValue, setNameValue] = useState<string>('');
+  const error = useSelector(errorSelector);
+  
+  const [nameValue, setNameValue] = useState<string | null>(null);
   const [priceValue, setPriceValue] = useState<number>(0);
-  const [supplyCodeValue, setSupplyCodeValue] = useState<string>('');
+  const [supplyCodeValue, setSupplyCodeValue] = useState<string | null>(null);
   const [countries, setCountries] = useState<any[]>([]);
-  const [country, setCountry] = useState<string>('');
+  const [country, setCountry] = useState<string | null>(null);
   const [date, setDate] = useState<string>(new Date().toISOString());
+
+  useEffect(() => {
+    if (!!error) {
+      openNotification('Ошибка добавления', 'Пожалуйста, проверьте правильность введенных данных');
+    }
+  }, [error]);
 
   const handleNameChange = (e: any) => {
     setNameValue(e.target.value);
@@ -55,16 +64,16 @@ const AddItemModal: React.FC<IAddItemModalProps> = ({ cellId }) => {
     await dispatch(addNewItem({ cellId, name: nameValue, price: priceValue, status: 'INSTOCK', country, expiresAt: date, supplyCode: supplyCodeValue }));
   }
 
-
   const closeModal = () => {
     dispatch(setShowModal(false));
   }
+  
   return (
     <UI.ItemsModal>
       <Row gutter={18}>
         <Col span={12}>
           <Typography.Text>Название товара</Typography.Text>
-          <Input value={nameValue} onChange={handleNameChange} />
+          <Input value={nameValue?.toString()} onChange={handleNameChange} />
 
         </Col>
         <Col span={12}>
@@ -77,7 +86,7 @@ const AddItemModal: React.FC<IAddItemModalProps> = ({ cellId }) => {
         <Col span={12}>
           <UI.Wrapper>
             <Typography.Text>Номер поставки</Typography.Text>
-            <Input value={supplyCodeValue} onChange={handleSupplyCodeChange} />
+            <Input value={supplyCodeValue?.toString()} onChange={handleSupplyCodeChange} />
           </UI.Wrapper>
 
         </Col>

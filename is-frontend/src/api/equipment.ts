@@ -12,3 +12,14 @@ export const updateEquipment = async (data: Partial<Equipment>[]) => {
 
   return response.data;
 }
+
+export const addEquipment = async (data: Partial<Equipment>) => {
+  const newData = {
+    ...data, pavilion: {
+      connect: {
+        code: data.pavilion?.code
+      }
+    }
+  }
+  await api.post('/v1/equipment', newData);
+}

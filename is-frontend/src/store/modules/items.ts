@@ -91,7 +91,6 @@ export const addNewItem = (data: any) => async (dispatch: Function) => {
     await addItem(data);
     dispatch(fetchItems());
     dispatch(setShowModal(false));
-    dispatch(setModalContent(null));
   } catch (err) {
     dispatch({
       type: ACTIONS.REJECT_DATA,
@@ -124,3 +123,4 @@ export default (
 
 export const itemsSelector = (state: IReduxState) => state.items.items;
 export const loadingSelector = (state: IReduxState) => state.items.loading;
+export const errorSelector = (state: IReduxState) => state.items.error;

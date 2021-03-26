@@ -75,14 +75,22 @@ const EditableTable: React.FC<IItemsProps> = ({
         setEditingKey('');
       }
 
-      const filteredData = newData.map((item: Item) => {
+      const filteredData = newData.map((item: any) => {
         return {
           ...item,
           departureAt: undefined,
           expiresAt: undefined,
           cellId: !!item.cellId ? item.cellId : undefined,
           status: getReversedStatus(item.status),
-          price: !!item.price ? +item.price : undefined
+          price: !!item.price ? +item.price : undefined,
+          equipmentId: !!item.equipmentId ? item.equipmentId : undefined,
+          pavilion: !!item.pavilion ? {
+            connect: {
+              code: item.pavilion.code
+            }
+          } : undefined,
+          pavilionId: undefined,
+          items: undefined
         }
 
       });

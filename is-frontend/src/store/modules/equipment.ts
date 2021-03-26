@@ -2,10 +2,11 @@ import { IReduxState } from './index';
 import { Cell, CellResponse } from '../../models/Cell';
 import { fetchAllCells } from '../../api/cells';
 import { Equipment, EquipmentResponse } from '../../models/Equipment';
-import { fetchAllEquipment, updateEquipment } from '../../api/equipment';
+import { addEquipment, fetchAllEquipment, updateEquipment } from '../../api/equipment';
 import { Item } from '../../models/Item';
 import { updateItem } from '../../api/items';
 import { fetchItems } from './items';
+import { setShowModal } from './modal';
 
 enum ACTIONS {
   REQUEST_DATA = 'EQUIPMENT/REQUEST_DATA',
@@ -35,8 +36,24 @@ const initialState: IEquipmentState = {
   error: null
 };
 
+export const addNewEquipment = (equipment: Partial<Equipment>) => async (dispatch: Function) => {
+  dispatch({
+    type: ACTIONS.REQUEST_DATA
+  });
 
-export const fetchEquipment = () => async (dispatch: Function, getState: Function) => {
+  try {
+    await addEquipment(equipment);
+    dispatch(fetchEquipment());
+    dispatch(setShowModal(false));
+  } catch (err) {
+    dispatch({
+      type: ACTIONS.REJECT_DATA,
+      payload: err
+    })
+  }
+}
+
+export const fetchEquipment = () => async (dispatch: Function) => {
   dispatch({
     type: ACTIONS.REQUEST_DATA
   });
@@ -125,3 +142,4 @@ export default (
 
 export const equipmentSelector = (state: IReduxState) => state.equipment.equipment;
 export const loadingSelector = (state: IReduxState) => state.cells.loading;
+export const errorSelector = (state: IReduxState) => state.equipment.error;

@@ -24,24 +24,23 @@ const AddExactItem: React.FC<AddExactItemProps> = ({ items, cellId, eqId }) => {
 
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
-
   const addNewItemtoCell = async () => {
     const item = { id: selectedItem?.id, cellId };
     dispatch(addItemToCell(item));
-    closeModal();
-    dispatch(setModalContent(null));
   };
 
   const addNewItemToEquipment= async () => {
     const item = { id: selectedItem?.id, equipmentId: eqId };
     dispatch(addItemToEquipment(item));
     closeModal();
-    dispatch(setModalContent(null));
   };
 
   const handleAddButtonClick = () => {
     if (!!cellId) addNewItemtoCell();
     else addNewItemToEquipment();
+    setSelectedItem(null);
+    closeModal();
+
   }
 
   const handleSelectItem = (itemId: string) => {
@@ -67,6 +66,7 @@ const AddExactItem: React.FC<AddExactItemProps> = ({ items, cellId, eqId }) => {
       <Select
         style={{ width: "100%" }}
         options={itemsOptions}
+        value={selectedItem?.id}
         onChange={handleSelectItem}
       />
       {!!selectedItem &&

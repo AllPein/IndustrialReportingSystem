@@ -3,6 +3,7 @@ import { Item } from '../../models/Item';
 import { Popover, Tag, Typography } from 'antd';
 import { randomColor } from '../../helpers/colors';
 import ItemsPopover from '../Popovers/ItemsPopover';
+import { Equipment } from '../../models/Equipment';
 
 export const columns = (
   editingKey: string | undefined,
@@ -19,7 +20,7 @@ export const columns = (
       dataIndex: 'name',
       sorter: (a: any, b: any) => a.name - b.name,
       editable: true,
-      inputType: 'input'
+      inputType: 'input',
     },
     {
       title: 'Код оборудования',
@@ -30,14 +31,14 @@ export const columns = (
     },
     {
       title: 'Код павильона',
-      dataIndex: 'pavilionCode',
+      dataIndex: ['pavilion', 'code'],
       inputType: 'select',
       sorter: (a: any, b: any) => a.pavilionCode - b.pavilionCode,
       editable: true,
       selectOptions: [
         {
           label: 'A1',
-          value: 'А1'
+          value: 'A1'
         },
         {
           label: 'A2',
@@ -45,7 +46,7 @@ export const columns = (
         },
         {
           label: 'A3',
-          value: 'А3'
+          value: 'A3'
         },
         {
           label: 'A4',
@@ -53,33 +54,33 @@ export const columns = (
         },
         {
           label: 'A5',
-          value: 'А5'
+          value: 'A5'
         },
         {
           label: 'A6',
           value: 'A6'
         },
         {
-          label: 'Б1',
+          label: 'B1',
           value: 'B1'
         },
         {
-          label: 'Б2',
+          label: 'B2',
           value: 'B2'
         },
         {
-          label: 'Б3',
+          label: 'B3',
           value: 'B3'
         },
         {
-          label: 'Б4',
+          label: 'B4',
           value: 'B4'
         }
       ],
     },
     {
       title: 'Адрес павильона',
-      dataIndex: 'pavilionAdress',
+      dataIndex: ['pavilion', 'address'],
       inputType: '',
       sorter: (a: any, b: any) => a.pavilionAdress - b.pavilionAdress,
       editable: false
@@ -113,7 +114,7 @@ export const columns = (
     title: 'Действие',
     dataIndex: 'operation',
     editable: false,
-    render: (_: any, record: Item) => {
+    render: (_: any, record: Equipment) => {
       const editable = isEditing(record);
       return editable ? (
         <span>

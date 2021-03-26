@@ -2,7 +2,7 @@ import { Item } from './Item';
 import { Pavilion } from './Pavilion';
 
 export interface Equipment {
-  id: string;
+  id?: string;
   items: Item[];
   code: string;
   name: string;

@@ -80,6 +80,7 @@ export default (
         ...state,
         token: action.payload,
         loading: false,
+        error: null
       };
     default:
       return { ...state };

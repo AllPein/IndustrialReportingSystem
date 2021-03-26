@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import * as UI from './styles';
 import { columns } from './columns';
 import EditableTable from '../../UI/EditableTable';
@@ -36,22 +36,24 @@ const Cells: React.FC<ICellsProps> = ({
     })
   }, [cells]);
 
-  const filteredItems = useCallback((cellId: string) => {
-    return items.filter((item: any) => item.cellId !== cellId)
-  }, [items]);
+  const filterItems = (cellId: string) => {
+    const newItems = items.filter((item: any) => (item.cellId !== cellId) && (item.status !== 'Отправлен'));
+    return newItems;
+  };
 
 
-  const handleAddItem = useCallback((cellId: string) => {
+  const handleAddItem = (cellId: string) => {
+    const filteredItems = filterItems(cellId);
     dispatch(setShowModal(true));
-    dispatch(setModalContent(<AddExactItem items={filteredItems(cellId)} />))
-  }, [cells]);
+    dispatch(setModalContent(<AddExactItem cellId={cellId} items={filteredItems} />))
+  };
 
 
   return (
     <UI.CellsWrapper>
       <EditableTable
         originData={filteredCells}
-        onButtonClick={(cellId:string) => handleAddItem(cellId)}
+        onButtonClick={(cellId: string) => handleAddItem(cellId)}
         loading={loading}
         recordType={!!cells[0] && cells[0]}
         columns={columns}

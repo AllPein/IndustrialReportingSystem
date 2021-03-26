@@ -21,7 +21,11 @@ const Home: React.FC = () => {
   const cells = useSelector(cellsSelector);
   const equipment = useSelector(equipmentSelector);
 
-  const getComponentFromTab = (name: string): JSX.Element => {
+  const filteredItems = useMemo(() => {
+    return getMappedItems(items);
+  }, [items]);
+
+  const getComponentFromTab = useCallback((name: string) => {
     switch (name) {
       case 'items':
         return <Items items={filteredItems} />;
@@ -32,17 +36,7 @@ const Home: React.FC = () => {
       default:
         return <></>
     }
-  };
-
-  const filteredItems = useMemo(() => {
-    return getMappedItems(items);
-  }, [items]);
-
-  useEffect(() => {
-    dispatch(fetchItems());
-    dispatch(fetchCells());
-    dispatch(fetchEquipment());
-  }, []);
+  }, [filteredItems, cells, equipment]);
 
   return (
     <UI.Wrapper>

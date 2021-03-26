@@ -2,6 +2,7 @@ import React, { MouseEventHandler, useMemo } from 'react';
 import { Button, Form, Input, Select } from 'antd';
 import { Item } from '../../models/Item';
 import { PlusCircleFilled } from '@ant-design/icons';
+import colors from '../../constants/colors';
 
 interface EditableCellProps {
   editing: boolean;
@@ -44,7 +45,13 @@ const EditableCell: React.FC<EditableCellProps> = ({
       return <Input />;
     }
     else if (inputType === 'button'){
-      return <Button icon={<PlusCircleFilled />} onClick={handleButtonEdit}></Button>
+      return <Button
+              type='primary' 
+              icon={<PlusCircleFilled  color={colors.white} />} 
+              onClick={handleButtonEdit}
+              style={{ marginLeft: 12 }}
+              />
+
     }
     else if (inputType === 'number') {
       return <Input type='number' />;
@@ -58,7 +65,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
       }
     }
 
-  }, [dataIndex, countriesOptions]);
+  }, [dataIndex, countriesOptions, record]);
 
 
   return (
@@ -69,12 +76,13 @@ const EditableCell: React.FC<EditableCellProps> = ({
           style={{ margin: 0 }}
           rules={[
             {
-              required: true,
+              required: dataIndex !=='items' && true,
               message: `Пожалуйста, введите ${title}!`,
             },
           ]}
         >
-          {dataIndex !=='items' ? inputNode : (
+          {dataIndex !=='items' ? 
+          inputNode : (
             <>
               {children}
               {inputNode}
